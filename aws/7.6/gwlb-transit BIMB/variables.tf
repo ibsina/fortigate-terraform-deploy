@@ -21,55 +21,55 @@ variable "az3" {
 
 // VPC for FortiGate Security VPC
 variable "vpccidr" {
-  default = "10.1.0.0/16"
-}
-
-variable "publiccidraz1" {
   default = "10.1.0.0/24"
 }
 
+variable "publiccidraz1" {
+  default = "10.1.0.0/28"
+}
+
 variable "privatecidraz1" {
-  default = "10.1.1.0/24"
+  default = "10.1.0.16/28"
 }
 
 variable "attachcidraz1" {
-  default = "10.1.2.0/24"
+  default = "10.1.0.32/28"
 }
 
 variable "gwlbcidraz1" {
-  default = "10.1.3.0/24"
+  default = "10.1.0.48/28"
 }
 
 variable "publiccidraz2" {
-  default = "10.1.4.0/24"
+  default = "10.1.0.64/28"
 }
 
 variable "privatecidraz2" {
-  default = "10.1.5.0/24"
+  default = "10.1.0.80/28"
 }
 
 variable "attachcidraz2" {
-  default = "10.1.6.0/24"
+  default = "10.1.0.96/28"
 }
 
 variable "gwlbcidraz2" {
-  default = "10.1.7.0/24"
+  default = "10.1.0.112/28"
 }
 
 variable "publiccidraz3" {
-  default = "10.1.8.0/24"
+  default = "10.1.0.128/28"
 }
 
 variable "privatecidraz3" {
-  default = "10.1.9.0/24"
+  default = "10.1.0.144/28"
 }
 
 variable "attachcidraz3" {
-  default = "10.1.10.0/24"
+  default = "10.1.0.160/28"
 }
 
 variable "gwlbcidraz3" {
-  default = "10.1.11.0/24"
+  default = "10.1.0.176/28"
 }
 
 

@@ -29,19 +29,19 @@ Terraform deploys the following components:
 
 
 ## Topology overview
-* FortiGate Security VPC (10.1.0.0/16)
-  - management-az1 (10.1.0.0/24)
-  - private-az1  (10.1.1.0/24)
-  - transit-az1  (10.1.2.0/24)
-  - gwlb-az1     (10.1.3.0/24)
-  - management-az2 (10.1.4.0/24)
-  - private-az2  (10.1.5.0/24)
-  - transit-az2  (10.1.6.0/24)
-  - gwlb-az2     (10.1.7.0/24)
-  - management-az3 (10.1.8.0/24)
-  - private-az3  (10.1.9.0/24)
-  - transit-az3  (10.1.10.0/24)
-  - gwlb-az3     (10.1.11.0/24)
+* FortiGate Security VPC (10.1.0.0/24)
+  - management-az1 (10.1.0.0/28)
+  - private-az1  (10.1.0.16/28)
+  - transit-az1  (10.1.0.32/28)
+  - gwlb-az1     (10.1.0.48/28)
+  - management-az2 (10.1.0.64/28)
+  - private-az2  (10.1.0.80/28)
+  - transit-az2  (10.1.0.96/28)
+  - gwlb-az2     (10.1.0.112/28)
+  - management-az3 (10.1.0.128/28)
+  - private-az3  (10.1.0.144/28)
+  - transit-az3  (10.1.0.160/28)
+  - gwlb-az3     (10.1.0.176/28)
 
 FortiGate VM(s) are deployed in Security VPC on both management and private subnet across three AZs.
 Transit Gateway and spoke/customer VPC integration is out of scope of this template and should be configured manually.
@@ -93,9 +93,9 @@ Use the following sequence after this template is deployed.
 1. Create TGW attachment for FortiGate Security VPC
 - Use your existing Transit Gateway.
 - Attach the Security VPC (FGTVPC output) using transit subnets in all three AZs:
-  - transit-az1 (10.1.2.0/24)
-  - transit-az2 (10.1.6.0/24)
-  - transit-az3 (10.1.10.0/24)
+  - transit-az1 (10.1.0.32/28)
+  - transit-az2 (10.1.0.96/28)
+  - transit-az3 (10.1.0.160/28)
 - Enable appliance mode on this attachment to preserve symmetric inspection flow.
 
 2. Create or select TGW route tables
