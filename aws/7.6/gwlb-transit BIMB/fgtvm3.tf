@@ -17,7 +17,7 @@ data "aws_network_interface" "fgt3eth1" {
 
 //
 data "aws_network_interface" "vpcendpointipaz3" {
-  depends_on = [aws_vpc_endpoint.gwlbendpoint]
+  depends_on = [aws_vpc_endpoint.gwlbendpointfgt]
   filter {
     name   = "vpc-id"
     values = ["${aws_vpc.fgtvm-vpc.id}"]

@@ -39,10 +39,6 @@ output "LoadBalancerPrivateIP3" {
   value = data.aws_network_interface.vpcendpointipaz3.private_ip
 }
 
-output "CustomerVPC" {
-  value = aws_vpc.customer-vpc.id
-}
-
 output "FGTVPC" {
   value = aws_vpc.fgtvm-vpc.id
 }
