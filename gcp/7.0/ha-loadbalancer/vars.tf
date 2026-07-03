@@ -20,12 +20,13 @@ variable "token" {
 }
 
 # FortiGate Image name
-# 7.0.8 payg is projects/fortigcp-project-001/global/images/fortinet-fgtondemand-708-20221013-001-w-license
-# 7.0.8 byol is projects/fortigcp-project-001/global/images/fortinet-fgt-708-20221013-001-w-license
+# 7.0.19 payg is projects/fortigcp-project-001/global/images/fortinet-fgtondemand-7019-20260202-001-w-license
+# 7.0.19 byol is projects/fortigcp-project-001/global/images/fortinet-fgt-7019-20260202-001-w-license
 variable "image" {
   type    = string
-  default = "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-708-20221013-001-w-license"
+  default = "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-7019-20260202-001-w-license"
 }
+
 # GCP instance machine type
 variable "machine" {
   type    = string

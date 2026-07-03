@@ -312,7 +312,7 @@ resource "aws_eip" "eip-shared" {
 
 # Create the instances
 resource "aws_instance" "fgt1" {
-    //it will use region, architect, and license type to decide which ami to use for deployment
+  //it will use region, architect, and license type to decide which ami to use for deployment
   ami               = var.fgtami[var.region][var.arch][var.license_type]
   instance_type     = var.instance_type
   availability_zone = var.availability_zone1
@@ -321,6 +321,7 @@ resource "aws_instance" "fgt1" {
     fgt_id               = "FGT-Active"
     type                 = "${var.license_type}"
     license_file         = "${var.license}"
+    format               = "${var.license_format}"
     fgt_data_ip          = join("/", [element(tolist(aws_network_interface.eni-fgt1-data.private_ips), 0), cidrnetmask("${var.security_vpc_data_subnet_cidr1}")])
     fgt_heartbeat_ip     = join("/", [element(tolist(aws_network_interface.eni-fgt1-hb.private_ips), 0), cidrnetmask("${var.security_vpc_heartbeat_subnet_cidr1}")])
     fgt_mgmt_ip          = join("/", [element(tolist(aws_network_interface.eni-fgt1-mgmt.private_ips), 0), cidrnetmask("${var.security_vpc_mgmt_subnet_cidr1}")])
@@ -334,21 +335,26 @@ resource "aws_instance" "fgt1" {
     fgt-remote-heartbeat = element(tolist(aws_network_interface.eni-fgt2-hb.private_ips), 0)
   })
   iam_instance_profile = aws_iam_instance_profile.APICall_profile.name
-  network_interface {
-    device_index         = 0
+
+  primary_network_interface {
     network_interface_id = aws_network_interface.eni-fgt1-data.id
   }
-  network_interface {
-    device_index         = 1
-    network_interface_id = aws_network_interface.eni-fgt1-hb.id
-  }
-  network_interface {
-    device_index         = 2
-    network_interface_id = aws_network_interface.eni-fgt1-mgmt.id
-  }
+
   tags = {
     Name = "${var.tag_name_prefix}-${var.tag_name_unique}-fgt1"
   }
+}
+
+resource "aws_network_interface_attachment" "eth1-attach" {
+  instance_id          = aws_instance.fgt1.id
+  network_interface_id = aws_network_interface.eni-fgt1-hb.id
+  device_index         = 1
+}
+
+resource "aws_network_interface_attachment" "eth2-attach" {
+  instance_id          = aws_instance.fgt1.id
+  network_interface_id = aws_network_interface.eni-fgt1-mgmt.id
+  device_index         = 2
 }
 
 resource "aws_instance" "fgt2" {
@@ -361,6 +367,7 @@ resource "aws_instance" "fgt2" {
     fgt_id               = "FGT-Passive"
     type                 = "${var.license_type}"
     license_file         = "${var.license2}"
+    format               = "${var.license_format}"
     fgt_data_ip          = join("/", [element(tolist(aws_network_interface.eni-fgt2-data.private_ips), 0), cidrnetmask("${var.security_vpc_data_subnet_cidr2}")])
     fgt_heartbeat_ip     = join("/", [element(tolist(aws_network_interface.eni-fgt2-hb.private_ips), 0), cidrnetmask("${var.security_vpc_heartbeat_subnet_cidr2}")])
     fgt_mgmt_ip          = join("/", [element(tolist(aws_network_interface.eni-fgt2-mgmt.private_ips), 0), cidrnetmask("${var.security_vpc_mgmt_subnet_cidr2}")])
@@ -375,19 +382,24 @@ resource "aws_instance" "fgt2" {
 
   })
   iam_instance_profile = aws_iam_instance_profile.APICall_profile.name
-  network_interface {
-    device_index         = 0
+  primary_network_interface {
     network_interface_id = aws_network_interface.eni-fgt2-data.id
   }
-  network_interface {
-    device_index         = 1
-    network_interface_id = aws_network_interface.eni-fgt2-hb.id
-  }
-  network_interface {
-    device_index         = 2
-    network_interface_id = aws_network_interface.eni-fgt2-mgmt.id
-  }
+
   tags = {
     Name = "${var.tag_name_prefix}-${var.tag_name_unique}-fgt2"
   }
 }
+
+resource "aws_network_interface_attachment" "fgt2eth1-attach" {
+  instance_id          = aws_instance.fgt2.id
+  network_interface_id = aws_network_interface.eni-fgt2-hb.id
+  device_index         = 1
+}
+
+resource "aws_network_interface_attachment" "fgt2eth2-attach" {
+  instance_id          = aws_instance.fgt2.id
+  network_interface_id = aws_network_interface.eni-fgt2-mgmt.id
+  device_index         = 2
+}
+

@@ -1,31 +1,35 @@
 // FGTVM active instance
 
 resource "aws_network_interface" "passiveeth0" {
-  description = "passive-port1"
-  subnet_id   = var.publiccidrid
-  private_ips = [var.passiveport1]
+  description             = "passive-port1"
+  subnet_id               = var.publiccidrid
+  private_ip_list_enabled = true
+  private_ip_list         = [var.passiveport1]
 }
 
 resource "aws_network_interface" "passiveeth1" {
-  description = "passive-port2"
-  subnet_id         = var.privatecidrid
-  private_ips       = [var.passiveport2]
-  source_dest_check = false
+  description             = "passive-port2"
+  subnet_id               = var.privatecidrid
+  private_ip_list_enabled = true
+  private_ip_list         = [var.passiveport2]
+  source_dest_check       = false
 }
 
 
 resource "aws_network_interface" "passiveeth2" {
-  description = "passive-port3"
-  subnet_id         = var.hasynccidrid
-  private_ips       = [var.passiveport3]
-  source_dest_check = false
+  description             = "passive-port3"
+  subnet_id               = var.hasynccidrid
+  private_ip_list_enabled = true
+  private_ip_list         = [var.passiveport3]
+  source_dest_check       = false
 }
 
 
 resource "aws_network_interface" "passiveeth3" {
-  description = "passive-port4"
-  subnet_id   = var.hamgmtcidrid
-  private_ips = [var.passiveport4]
+  description             = "passive-port4"
+  subnet_id               = var.hamgmtcidrid
+  private_ip_list_enabled = true
+  private_ip_list         = [var.passiveport4]
 }
 
 
@@ -56,7 +60,8 @@ resource "aws_network_interface_sg_attachment" "passivehasyncattachment" {
 
 
 resource "aws_instance" "fgtpassive" {
-  depends_on        = [aws_instance.fgtactive]
+  depends_on = [aws_instance.fgtactive]
+  //it will use region, architect, and license type to decide which ami to use for deployment
   ami               = var.fgtami[var.region][var.arch][var.license_type]
   instance_type     = var.size
   availability_zone = var.az
@@ -64,6 +69,7 @@ resource "aws_instance" "fgtpassive" {
   user_data = templatefile("${var.bootstrap-passive}", {
     type            = "${var.license_type}"
     license_file    = "${var.license2}"
+    format          = "${var.license_format}"
     port1_ip        = "${var.passiveport1}"
     port1_mask      = "${var.passiveport1mask}"
     port2_ip        = "${var.passiveport2}"
@@ -90,28 +96,30 @@ resource "aws_instance" "fgtpassive" {
     volume_type = "standard"
   }
 
-  network_interface {
+  primary_network_interface {
     network_interface_id = aws_network_interface.passiveeth0.id
-    device_index         = 0
   }
-
-  network_interface {
-    network_interface_id = aws_network_interface.passiveeth1.id
-    device_index         = 1
-  }
-
-  network_interface {
-    network_interface_id = aws_network_interface.passiveeth2.id
-    device_index         = 2
-  }
-
-  network_interface {
-    network_interface_id = aws_network_interface.passiveeth3.id
-    device_index         = 3
-  }
-
 
   tags = {
     Name = "FortiGateVM Passive"
   }
 }
+
+resource "aws_network_interface_attachment" "passiveeth1-attach" {
+  instance_id          = aws_instance.fgtpassive.id
+  network_interface_id = aws_network_interface.passiveeth1.id
+  device_index         = 1
+}
+
+resource "aws_network_interface_attachment" "passiveeth2-attach" {
+  instance_id          = aws_instance.fgtpassive.id
+  network_interface_id = aws_network_interface.passiveeth2.id
+  device_index         = 2
+}
+
+resource "aws_network_interface_attachment" "passiveeth3-attach" {
+  instance_id          = aws_instance.fgtpassive.id
+  network_interface_id = aws_network_interface.passiveeth3.id
+  device_index         = 3
+}
+

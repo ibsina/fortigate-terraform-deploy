@@ -33,7 +33,7 @@ data "aws_network_interface" "vpcendpointipaz2" {
   //  Using AZ1's endpoint ip
   filter {
     name   = "availability-zone"
-    values = ["${var.az1}"]
+    values = ["${var.az2}"]
   }
 }
 
@@ -59,6 +59,7 @@ resource "aws_instance" "fgtvm2" {
   user_data = templatefile("${var.bootstrap-fgtvm2}", {
     type         = "${var.license_type}"
     license_file = "${var.license2}"
+    format       = "${var.license_format}"
     adminsport   = "${var.adminsport}"
     cidr         = "${var.privatecidraz1}"
     gateway      = cidrhost(var.privatecidraz2, 1)
@@ -76,17 +77,17 @@ resource "aws_instance" "fgtvm2" {
     volume_type = "standard"
   }
 
-  network_interface {
+  primary_network_interface {
     network_interface_id = aws_network_interface.fgt2eth0.id
-    device_index         = 0
-  }
-
-  network_interface {
-    network_interface_id = aws_network_interface.fgt2eth1.id
-    device_index         = 1
   }
 
   tags = {
     Name = "FortiGateVM2"
   }
+}
+
+resource "aws_network_interface_attachment" "fgt2eth1-attach" {
+  instance_id          = aws_instance.fgtvm2.id
+  network_interface_id = aws_network_interface.fgt2eth1.id
+  device_index         = 1
 }

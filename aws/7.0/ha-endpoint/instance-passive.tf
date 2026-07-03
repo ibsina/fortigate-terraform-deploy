@@ -65,6 +65,7 @@ resource "aws_instance" "fgtpassive" {
   user_data = templatefile("${var.bootstrap-passive}", {
     type            = "${var.license_type}"
     license_file    = "${var.license2}"
+    format          = "${var.license_format}"
     port1_ip        = "${var.passiveport1}"
     port1_mask      = "${var.passiveport1mask}"
     port2_ip        = "${var.passiveport2}"
@@ -95,28 +96,30 @@ resource "aws_instance" "fgtpassive" {
     volume_type = "standard"
   }
 
-  network_interface {
+  primary_network_interface {
     network_interface_id = aws_network_interface.passiveeth0.id
-    device_index         = 0
   }
-
-  network_interface {
-    network_interface_id = aws_network_interface.passiveeth1.id
-    device_index         = 1
-  }
-
-  network_interface {
-    network_interface_id = aws_network_interface.passiveeth2.id
-    device_index         = 2
-  }
-
-  network_interface {
-    network_interface_id = aws_network_interface.passiveeth3.id
-    device_index         = 3
-  }
-
 
   tags = {
     Name = "FortiGateVM Passive"
   }
 }
+
+resource "aws_network_interface_attachment" "passiveeth1-attach" {
+  instance_id          = aws_instance.fgtpassive.id
+  network_interface_id = aws_network_interface.passiveeth1.id
+  device_index         = 1
+}
+
+resource "aws_network_interface_attachment" "passiveeth2-attach" {
+  instance_id          = aws_instance.fgtpassive.id
+  network_interface_id = aws_network_interface.passiveeth2.id
+  device_index         = 2
+}
+
+resource "aws_network_interface_attachment" "passiveeth3-attach" {
+  instance_id          = aws_instance.fgtpassive.id
+  network_interface_id = aws_network_interface.passiveeth3.id
+  device_index         = 3
+}
+

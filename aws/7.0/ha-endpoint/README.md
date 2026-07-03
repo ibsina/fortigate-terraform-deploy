@@ -16,10 +16,15 @@ Terraform deploys the following components:
    - Private EC2 endpoint in hamgmt subnet
    - FortiGate-VM will use the private dns server provided by the VPC.
 
+![ha-architecture](./aws-ha-private-endpoint.png?raw=true "HA Architecture")
+
 ## Deployment
 To deploy the FortiGate-VM to AWS:
 1. Clone the repository.
 2. Customize variables in the `terraform.tfvars.example` and `variables.tf` file as needed.  And rename `terraform.tfvars.example` to `terraform.tfvars`.
+> [!NOTE]
+> In the license_format variable, there are two different choices.
+> Either token or file.  Token is FortiFlex token, and file is FortiGate-VM license file.
 3. Initialize the providers and modules:
    ```sh
    $ cd XXXXX

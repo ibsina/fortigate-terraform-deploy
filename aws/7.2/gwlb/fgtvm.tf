@@ -53,6 +53,7 @@ resource "aws_instance" "fgtvm" {
   user_data = templatefile("${var.bootstrap-fgtvm}", {
     type         = "${var.license_type}"
     license_file = "${var.license}"
+    format       = "${var.license_format}"
     adminsport   = "${var.adminsport}"
     endpointip   = "${data.aws_network_interface.vpcendpointip.private_ip}"
   })
@@ -68,17 +69,18 @@ resource "aws_instance" "fgtvm" {
     volume_type = "standard"
   }
 
-  network_interface {
+  primary_network_interface {
     network_interface_id = aws_network_interface.eth0.id
-    device_index         = 0
-  }
-
-  network_interface {
-    network_interface_id = aws_network_interface.eth1.id
-    device_index         = 1
   }
 
   tags = {
     Name = "FortiGateVM"
   }
 }
+
+resource "aws_network_interface_attachment" "eth1-attach" {
+  instance_id          = aws_instance.fgtvm.id
+  network_interface_id = aws_network_interface.eth1.id
+  device_index         = 1
+}
+

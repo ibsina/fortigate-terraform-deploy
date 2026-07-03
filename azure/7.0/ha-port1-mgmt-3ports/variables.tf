@@ -68,14 +68,14 @@ variable "fgtsku" {
   type = map(any)
   default = {
     byol = "fortinet_fg-vm"
-    payg = "fortinet_fg-vm_payg_2022"
+    payg = "fortinet_fg-vm_payg_2023"
   }
 }
 
 // FOS version
 variable "fgtversion" {
   type    = string
-  default = "7.0.8"
+  default = "7.0.17"
 }
 
 variable "adminusername" {

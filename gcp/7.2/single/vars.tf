@@ -13,27 +13,39 @@ variable "project" {
   type    = string
   default = "<gcp project>"
 }
+# GCP Fortinet official project
+variable "ftntproject" {
+  type    = string
+  default = "fortigcp-project-001"
+}
 # GCP oauth access token
 variable "token" {
   type    = string
   default = "<gcp oauth access token>"
 }
 # FortiGate Image name
-# 7.2.2 payg is projects/fortigcp-project-001/global/images/fortinet-fgtondemand-722-20221004-001-w-license
-# 7.2.2 byol is projects/fortigcp-project-001/global/images/fortinet-fgt-722-20221004-001-w-license
+# 7.2.13 x86 payg is projects/fortigcp-project-001/global/images/fortinet-fgtondemand-7213-20260202-001-w-license
+# 7.2.13 x86 byol is projects/fortigcp-project-001/global/images/fortinet-fgt-7213-20260202-001-w-license
+# 7.2.13 arm payg is projects/fortigcp-project-001/global/images/fortinet-fgtondemand-arm64-7213-20260202-001-w-license
+# 7.2.13 arm byol is projects/fortigcp-project-001/global/images/fortinet-fgt-arm64-7213-20260202-001-w-license
 variable "image" {
   type    = string
-  default = "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-722-20221004-001-w-license"
+  default = "projects/fortigcp-project-001/global/images/fortinet-fgtondemand-7213-20260202-001-w-license"
 }
+# GCP VNIC type
+# either GVNIC or VIRTIO_NET
+# ARM must use GVNIC
+variable "nictype" {
+  type    = string
+  default = "GVNIC"
+}
+# GCP instance machine type
+# ARM platform needs to use t2a-standard-4
+# x86 can uses n1-standard-4
 # GCP instance machine type
 variable "machine" {
   type    = string
-  default = "n1-standard-1"
-}
-# VPC CIDR
-variable "vpc_cidr" {
-  type    = string
-  default = "172.16.0.0/16"
+  default = "n1-standard-4"
 }
 # Public Subnet CIDR
 variable "public_subnet" {
