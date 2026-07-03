@@ -14,7 +14,7 @@ resource "aws_subnet" "publicsubnetaz1" {
   cidr_block        = var.publiccidraz1
   availability_zone = var.az1
   tags = {
-    Name = "fgt public subnet az1"
+    Name = "fgt management subnet az1"
   }
 }
 //
@@ -23,7 +23,7 @@ resource "aws_subnet" "publicsubnetaz2" {
   cidr_block        = var.publiccidraz2
   availability_zone = var.az2
   tags = {
-    Name = "fgt public subnet az2"
+    Name = "fgt management subnet az2"
   }
 }
 
@@ -32,7 +32,7 @@ resource "aws_subnet" "publicsubnetaz3" {
   cidr_block        = var.publiccidraz3
   availability_zone = var.az3
   tags = {
-    Name = "fgt public subnet az3"
+    Name = "fgt management subnet az3"
   }
 }
 

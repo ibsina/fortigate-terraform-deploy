@@ -1,16 +1,4 @@
 
-output "FGTPublicIP" {
-  value = aws_eip.FGTPublicIP.public_ip
-}
-
-output "FGT2PublicIP" {
-  value = aws_eip.FGT2PublicIP.public_ip
-}
-
-output "FGT3PublicIP" {
-  value = aws_eip.FGT3PublicIP.public_ip
-}
-
 output "Username" {
   value = "admin"
 }

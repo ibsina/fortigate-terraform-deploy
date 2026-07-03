@@ -13,13 +13,14 @@ Default deployment values in this folder are configured for Malaysia Region (`ap
 ## Deployment overview
 Terraform deploys the following components:
 * 1 AWS VPC
-  - FGT Security VPC with 1 public, 1 private, 1 gwlb, and 1 transit gateway subnet per AZ across three AZs.
+  - FGT Security VPC with 1 management, 1 private, 1 gwlb, and 1 transit gateway subnet per AZ across three AZs.
       - 1 Internet Gateway
       - 1 Route table with private subnet association.
-      - 1 Route table with public subnet association, 1 default route with target to Internet Gateway.
+      - 1 Route table with management subnet association, 1 default route with target to Internet Gateway.
       - 1 Route table with gwlb subnet association.
       - 1 Route table with transit gateway subnet association, and 1 default with with target to Gateway Load Balancer Endpoint.
-  - Three FortiGate-VM instances with 2 NICs each: port1 on public subnet and port2 on private subnet, one instance per AZ.
+  - Three FortiGate-VM instances with 2 NICs each: port1 on management subnet and port2 on private subnet, one instance per AZ.
+    - No public IP is assigned to FortiGate port1 in this template.
     - port2 will be in its own FG-traffic vdom.
     - A geneve interface will be created base on port2 during bootstrap and this will be the interface where traffic will received from the Gateway Load Balancer.
   - Two Network Security Group rules: one for external, one for internal.
@@ -29,20 +30,20 @@ Terraform deploys the following components:
 
 ## Topology overview
 * FortiGate Security VPC (10.1.0.0/16)
-  - public-az1   (10.1.0.0/24)
+  - management-az1 (10.1.0.0/24)
   - private-az1  (10.1.1.0/24)
   - transit-az1  (10.1.2.0/24)
   - gwlb-az1     (10.1.3.0/24)
-  - public-az2   (10.1.4.0/24)
+  - management-az2 (10.1.4.0/24)
   - private-az2  (10.1.5.0/24)
   - transit-az2  (10.1.6.0/24)
   - gwlb-az2     (10.1.7.0/24)
-  - public-az3   (10.1.8.0/24)
+  - management-az3 (10.1.8.0/24)
   - private-az3  (10.1.9.0/24)
   - transit-az3  (10.1.10.0/24)
   - gwlb-az3     (10.1.11.0/24)
 
-FortiGate VM(s) are deployed in Security VPC on both public and private subnet across three AZs.
+FortiGate VM(s) are deployed in Security VPC on both management and private subnet across three AZs.
 Transit Gateway and spoke/customer VPC integration is out of scope of this template and should be configured manually.
 
 ![gwlb-transit-architecture](./aws-gwlb-transit.png?raw=true "GWLB Transit Architecture")
@@ -78,9 +79,6 @@ Outputs:
 FGT1-Password = <FGT 1 Password>
 FGT2-Password = <FGT 2 Password>
 FGT3-Password = <FGT 3 Password>
-FGT2PublicIP = <FGT 2 Public IP>
-FGT3PublicIP = <FGT 3 Public IP>
-FGTPublicIP = <FGT 1 Public IP>
 FGTVPC = <FGT Security VPC>
 LoadBalancerPrivateIP = <Private Load Balancer IP>
 LoadBalancerPrivateIP2 = <Private Load Balancer IP>

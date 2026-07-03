@@ -11,7 +11,7 @@ resource "aws_route_table" "fgtvmpublicrt" {
   vpc_id = aws_vpc.fgtvm-vpc.id
 
   tags = {
-    Name = "fgtvm-public-rt"
+    Name = "fgtvm-management-rt"
   }
 }
 
@@ -114,28 +114,10 @@ resource "aws_route_table_association" "fgtprivateassociateaz3" {
   route_table_id = aws_route_table.fgtvmprivatert.id
 }
 
-resource "aws_eip" "FGTPublicIP" {
-  depends_on        = [aws_instance.fgtvm]
-  domain            = "vpc"
-  network_interface = aws_network_interface.eth0.id
-}
-
-resource "aws_eip" "FGT2PublicIP" {
-  depends_on        = [aws_instance.fgtvm2]
-  domain            = "vpc"
-  network_interface = aws_network_interface.fgt2eth0.id
-}
-
-resource "aws_eip" "FGT3PublicIP" {
-  depends_on        = [aws_instance.fgtvm3]
-  domain            = "vpc"
-  network_interface = aws_network_interface.fgt3eth0.id
-}
-
 // Security Group
 resource "aws_security_group" "public_allow" {
-  name        = "Public Allow"
-  description = "Public Allow traffic"
+  name        = "Management Allow"
+  description = "Management Allow traffic"
   vpc_id      = aws_vpc.fgtvm-vpc.id
 
   ingress {
@@ -167,7 +149,7 @@ resource "aws_security_group" "public_allow" {
   }
 
   tags = {
-    Name = "Public Allow"
+    Name = "Management Allow"
   }
 }
 
